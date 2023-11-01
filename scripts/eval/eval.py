@@ -140,6 +140,9 @@ def evaluate_model(
         composer_model = load_peft_model(model_cfg.model, tokenizer,
                                          num_retries)
     else:
+        import os
+        print(f'rank{dist.get_blobal_rank()')
+        print(os.listdir('/tmp/mpt7b_hf_weights'))
         composer_model = load_model(model_cfg.model, tokenizer, fsdp_config,
                                     num_retries)
 
