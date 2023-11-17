@@ -31,6 +31,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--path', type=str, required=True)
     parser.add_argument('--out_root', type=str, required=True)
     parser.add_argument('--compression', type=str, default=None)
+    parser.add_argument('--hf_cache_dir', type=str, default=None)
 
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument(
@@ -43,6 +44,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--bos_text', type=str, required=False, default=None)
     parser.add_argument('--eos_text', type=str, required=False, default=None)
     parser.add_argument('--no_wrap', default=False, action='store_true')
+    parser.add_argument('--trust_remote_code', default=False, action='store_true')
 
     parsed = parser.parse_args()
 
@@ -75,6 +77,7 @@ def build_hf_dataset(
     bos_text: str = '',
     eos_text: str = '',
     no_wrap: bool = False,
+    cache_dir: Optional[str] = None,
     tokenizer: PreTrainedTokenizerBase = None,
 ) -> IterableDataset:
     """Build an IterableDataset over the HF C4 or pile source data.
@@ -101,7 +104,8 @@ def build_hf_dataset(
 
     hf_dataset = hf_datasets.load_dataset('json',
                                           data_files=data_files,
-                                          split=split)
+                                          split=split,
+                                          cache_dir=cache_dir)
 
     if mode == ConcatMode.NO_CONCAT:
         dataset = NoConcatDataset(hf_dataset)
@@ -163,7 +167,7 @@ def main(args: Namespace) -> None:
     """
     if args.concat_tokens is not None:
         mode = ConcatMode.CONCAT_TOKENS
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer, trust_remote_code=args.trust_remote_code)
         # we will enforce length, so suppress warnings about sequences too long for the model
         tokenizer.model_max_length = int(1e30)
         columns = {'tokens': 'bytes'}
@@ -174,6 +178,7 @@ def main(args: Namespace) -> None:
 
     # Get samples
     dataset = build_hf_dataset(path=args.path,
+                               cache_dir=args.hf_cache_dir,
                                split=args.split,
                                mode=mode,
                                max_length=args.concat_tokens,
@@ -182,7 +187,7 @@ def main(args: Namespace) -> None:
                                no_wrap=args.no_wrap,
                                tokenizer=tokenizer)
 
-    print('here')
+    print("Data loading and spliting done!")
 
     # Write samples
     print(f'Converting to MDS format...')
