@@ -46,6 +46,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--eos_text', type=str, required=False, default=None)
     parser.add_argument('--no_wrap', default=False, action='store_true')
     parser.add_argument('--trust_remote_code', default=False, action='store_true')
+    parser.add_argument('--use_multiprocessing', default=False, action='store_true')
     parser.add_argument('--num_workers', type=int, default=1)
 
     parsed = parser.parse_args()
@@ -167,7 +168,7 @@ def init_worker():
     print(f'\nInitialize Worker PID: {pid}', flush=True, end='')
 
 def get_data_sample(sample):
-    print(f"\nWorker PID: {os.getpid()} \tprocessing sample")
+    # print(f"\nWorker PID: {os.getpid()} \tprocessing sample")
     return sample
 
 def main(args: Namespace) -> None:
@@ -206,15 +207,17 @@ def main(args: Namespace) -> None:
         f'Note that the progress bar is based on the dataset length before tokenization.'
     )
     print(f'It will finish at a value below 100% if tokenizing')
-    # with MDSWriter(columns=columns,
-    #                out=os.path.join(args.out_root),
-    #                compression=args.compression) as out:
-    #     for sample in tqdm(dataset):
-    #         out.write(sample)
 
-    with Pool(initializer=init_worker, processes=args.num_workers) as pool:
-        with MDSWriter(out=args.out_root, columns=columns) as out:
-            for sample in pool.imap(get_data_sample, dataset):
+    if args.use_multiprocessing:
+        with Pool(initializer=init_worker, processes=args.num_workers) as pool:
+            with MDSWriter(out=args.out_root, columns=columns) as out:
+                for sample in pool.imap(get_data_sample, dataset):
+                    out.write(sample)
+    else:
+        with MDSWriter(columns=columns,
+                   out=os.path.join(args.out_root),
+                   compression=args.compression) as out:
+            for sample in tqdm(dataset):
                 out.write(sample)
 
 
