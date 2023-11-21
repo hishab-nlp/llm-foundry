@@ -1,3 +1,7 @@
+dataset/
+scripts/gcp_cred.json
+scripts/data_prep/hf_cache/
+scripts/core
 # Data (created in readme examples)
 my-copy-c4*/
 my-copy-arxiv*/
