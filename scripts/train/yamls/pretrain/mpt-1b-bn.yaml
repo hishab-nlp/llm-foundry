@@ -1,10 +1,10 @@
 data_local: /data1/dataset2
-data_remote: gs://llm_data_store/iter_1_train_data_234gb_splited/mds_format # If blank, files must be present in data_local
+data_remote: gs://llm_data_store/iter_1_train_data_234gb_splited/llm_small_data/split/mds_format # If blank, files must be present in data_local
 max_seq_len: 2048
 global_seed: 17
 
 # Run Name
-run_name: titulm_run1 # If left blank, will be read from env var $RUN_NAME
+run_name: titulm_1b_data_small # If left blank, will be read from env var $RUN_NAME
 
 # Model
 model:
@@ -58,7 +58,7 @@ scheduler:
 
 optimizer:
   name: decoupled_adamw
-  lr: 1.8e-4
+  lr: 2.0e-4
   betas:
   - 0.9
   - 0.95
@@ -107,7 +107,7 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "titulm-pretrain-run1"
+    "project": "titulm-1b-small-data"
   }
 
 # Checkpoint to local filesystem or remote object store
@@ -115,7 +115,8 @@ save_interval: 1000ba
 save_num_checkpoints_to_keep: 100  # Important, this cleans up checkpoints saved to DISK
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: gs://llm-train-checkpoints/iter_1/runs/run3
+save_folder: gs://llm-train-checkpoints/llm_1b_small_data
 # Load from local filesystem or remote object store
 # load_path: ./gpt-1b/checkpoints/latest-rank{rank}.pt
-load_path: gs://llm-train-checkpoints/iter_1/runs/run1/ep0-ba40000-rank0.pt
+# load_path: gs://llm-train-checkpoints/iter_1/runs/run3/ep0-ba41000-rank0.pt
+# load_weights_only: true
