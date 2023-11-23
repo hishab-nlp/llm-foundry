@@ -1,10 +1,10 @@
-data_local: /llm-foundry/dataset
-data_remote: # If blank, files must be present in data_local
+data_local: /data1/dataset
+data_remote: gs://llm_data_store/iter_1_train_data_234gb_splited/llm_small_data/split/mds_format # If blank, files must be present in data_local
 max_seq_len: 2048
 global_seed: 17
 
 # Run Name
-run_name: # If left blank, will be read from env var $RUN_NAME
+run_name: titulm_125m # If left blank, will be read from env var $RUN_NAME
 
 # Model
 model:
@@ -36,7 +36,7 @@ train_loader:
     max_seq_len: ${max_seq_len}
     shuffle_seed: ${global_seed}
   drop_last: true
-  num_workers: 8
+  num_workers: 32
 
 eval_loader:
   name: text
@@ -48,7 +48,7 @@ eval_loader:
     max_seq_len: ${max_seq_len}
     shuffle_seed: ${global_seed}
   drop_last: false
-  num_workers: 8
+  num_workers: 32
 
 # Optimization
 scheduler:
@@ -80,7 +80,7 @@ global_train_batch_size: 256
 seed: ${global_seed}
 device_eval_batch_size: 8 #16
 device_train_microbatch_size: 8 #16
-# device_train_microbatch_size: auto
+#device_train_microbatch_size: auto
 precision: amp_bf16
 
 # FSDP
@@ -107,15 +107,15 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "llm-train-iter-1"
+    "project": "titulm-125m"
   }
 
 # Checkpoint to local filesystem or remote object store
-# save_interval: 500ba
-# save_num_checkpoints_to_keep: 1  # Important, this cleans up checkpoints saved to DISK
+save_interval: 1000ba
+save_num_checkpoints_to_keep: 500  # Important, this cleans up checkpoints saved to DISK
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: gs://llm_data_store/iter_1_train_data_234gb_splited/train_checkpoints/test_1
+save_folder: gs://llm-train-checkpoints/llm_125m/run3
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
