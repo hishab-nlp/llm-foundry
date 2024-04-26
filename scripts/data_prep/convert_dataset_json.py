@@ -8,7 +8,6 @@ from enum import Enum
 from glob import glob
 from typing import Dict, Iterable, Optional
 
-from multiprocessing import Pool
 import datasets as hf_datasets
 from streaming import MDSWriter
 from torch.utils.data import DataLoader, IterableDataset
@@ -47,7 +46,6 @@ def parse_args() -> Namespace:
     parser.add_argument('--no_wrap', default=False, action='store_true')
     parser.add_argument('--trust_remote_code', default=False, action='store_true')
     parser.add_argument('--use_multiprocessing', default=False, action='store_true')
-    parser.add_argument('--num_workers', type=int, default=1)
 
     parsed = parser.parse_args()
 
@@ -161,16 +159,6 @@ def generate_samples(
             n_samples += 1
             yield {k: v[idx] for k, v in batch.items()}
 
-# Initialize the worker process
-def init_worker():
-    # Get the pid for the current worker process
-    pid = os.getpid()
-    print(f'\nInitialize Worker PID: {pid}', flush=True, end='')
-
-def get_data_sample(sample):
-    # print(f"\nWorker PID: {os.getpid()} \tprocessing sample")
-    return sample
-
 def main(args: Namespace) -> None:
     """Main: create C4/pile streaming dataset.
 
@@ -208,17 +196,11 @@ def main(args: Namespace) -> None:
     )
     print(f'It will finish at a value below 100% if tokenizing')
 
-    if args.use_multiprocessing:
-        with Pool(initializer=init_worker, processes=args.num_workers) as pool:
-            with MDSWriter(out=args.out_root, columns=columns) as out:
-                for sample in pool.imap(get_data_sample, dataset):
-                    out.write(sample)
-    else:
-        with MDSWriter(columns=columns,
-                   out=os.path.join(args.out_root),
-                   compression=args.compression) as out:
-            for sample in tqdm(dataset):
-                out.write(sample)
+    with MDSWriter(columns=columns,
+                out=os.path.join(args.out_root),
+                compression=args.compression) as out:
+        for sample in tqdm(dataset):
+            out.write(sample)
 
 
 if __name__ == '__main__':
