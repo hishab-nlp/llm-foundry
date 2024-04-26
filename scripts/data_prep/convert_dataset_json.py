@@ -45,7 +45,6 @@ def parse_args() -> Namespace:
     parser.add_argument('--eos_text', type=str, required=False, default=None)
     parser.add_argument('--no_wrap', default=False, action='store_true')
     parser.add_argument('--trust_remote_code', default=False, action='store_true')
-    parser.add_argument('--use_multiprocessing', default=False, action='store_true')
 
     parsed = parser.parse_args()
 
