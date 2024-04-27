@@ -35,6 +35,26 @@ python convert_dataset_json.py \
 
 Where `--path` can be a single json file, or a folder containing json files. `--split` denotes the intended split (hf defaults to `train`).
 
+### JSON data with multiprocessing
+
+- Run
+
+```bash
+# Convert json dataset to StreamingDataset format
+python run_mprocess_convert_dataset_json.py \
+--json_chunk_path "/path/my_jsonls_files" \
+--output_dir "/path/myoutput_dir" \
+--num_worker 32 # according to your CPU and RAM. each process took 1 CPU and 1 GB RAM approximately.
+```
+
+- Merge the shards by
+
+```bash
+python merge_mds_shards.py \
+--root_dir "/path/myoutput_dir"
+```
+
+
 ## Converting a finetuning dataset
 Using the `convert_finetuning_dataset.py` script you can run a command such as:
 <!--pytest.mark.skip-->
