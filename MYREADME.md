@@ -3,16 +3,24 @@
 ## Installation
 - Pull the docker mosaicml docker image by `docker pull mosaicml/llm-foundry:2.1.0_cu121-latest`
 - Clone our forked repo by `git clone https://github.com/hishab-nlp/llm-foundry.git`
-- Run the docker image with necessary arguments
+- Run the docker image with necessary arguments(For GPU)
 
   ```
   sudo docker run -it --gpus all --shm-size=1g --ulimit memlock=-1 -v /data1/sagor/hishab_nlp/llm-foundry:/llm-foundry --rm mosaicml/llm-foundry:2.1.0_cu121-latest
   ```
-- Change directory to `/llm-foundry` and install dependencies
+
+- Run the docker image with necessary arguments(For CPU)
 
   ```
+  sudo docker run -it --shm-size=1g --ulimit memlock=-1 -v /data1/sagor/hishab_nlp/llm-foundry:/llm-foundry --rm mosaicml/llm-foundry:2.1.0_cu121-latest
+  ```
+
+- Change directory to `/llm-foundry` and install dependencies
+
+  ```bash
   cd /llm-foundry
-  pip install -e ".[gpu]"
+  pip install -e ".[gpu]" # for gpu
+  pip install -e . # for cpu
   ```
 - Authenticate huggingface by `huggingface-cli login`
 
@@ -30,6 +38,25 @@
   --eos_text '</s>' \
   --bos_text '<s>'
   ```
+This took huge time to convert the large datasets. It also not multiprocesing enable.To mitigate this follow the below steps.
+
+- Run:
+
+```bash
+python run_mprocess_convert_dataset_json.py \
+--json_chunk_path "/path/my_jsonls_files" \
+--output_dir "/path/myoutput_dir" \
+--num_worker 32 # according to your CPU and RAM. each process took 1 CPU and 1 GB RAM approximately.
+```
+
+- Then merge the shards by running
+
+```bash
+python merge_mds_shards.py \
+--root_dir "/path/myoutput_dir"
+```
+
+NB: All need to run inside docker.
 
 ## Training
 - Change directory to `scripts`
