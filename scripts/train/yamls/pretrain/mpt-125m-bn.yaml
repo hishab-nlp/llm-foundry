@@ -119,4 +119,5 @@ save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_exp
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
+load_path: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/checkpoints/ep0-ba6000-rank0.pt
 # load_path: s3://my-bucket/my-folder/gpt-125m/checkpoints/latest-rank{rank}.pt
