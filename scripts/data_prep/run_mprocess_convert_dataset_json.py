@@ -10,42 +10,35 @@ import os
 import glob
 import multiprocessing
 from tqdm import tqdm
-from argparse import ArgumentParser
 
-args = ArgumentParser()
 
-args.add_argument('--json_chunk_path', type=str, required=True, help="json lines chunk path where several jsonl files exist")
-args.add_argument('--output_dir', type=str, required=True, help='path where each json output sub directory will be saved')
-args.add_argument('--num_worker', type=int, default=None, help='number of worker for multiprocessing')
+json_chunk_path = "/data/mybndatasets/web_data_only/train"
+output_dir = "/data/mybndatasets/web_data_only/mds/train"
+os.makedirs(output_dir, exist_ok=True)
 
-parsed = args.parse_args()
+files = glob.glob(json_chunk_path + '/*.jsonl')
+print(f"total jsonl files: {len(files)}")
 
-def main():
-    files = glob.glob(parsed.json_chunk_path + '/*.jsonl')
-    print(f"total jsonl files: {len(files)}")
+def process(file: str) -> None:
+    filename = os.path.basename(file).replace('.jsonl', '')
+    output_file_dir = os.path.join(output_dir, filename)
+    os.makedirs(output_file_dir, exist_ok=True)
 
-    def process(file: str) -> None:
-        filename = os.path.basename(file).replace('.jsonl', '')
-        output_file_dir = os.path.join(parsed.output_dir, filename)
-        os.makedirs(output_file_dir, exist_ok=True)
+    command = f"""python convert_dataset_json.py \
+    --path {file} \
+    --out_root {output_file_dir} \
+    --split train \
+    --concat_tokens 2048 \
+    --tokenizer hishab/titulm-sentencepiece-72k \
+    --eos_text '</s>' \
+    --bos_text '<s>' \
+    --trust_remote_code \
+    --hf_cache_dir /data/cached"""
 
-        command = f"""python convert_dataset_json.py \
-        --path {file} \
-        --out_root {output_file_dir} \
-        --split train \
-        --concat_tokens 2048 \
-        --tokenizer hishab/Sentencepiece_47GB_72k_test \
-        --eos_text '</s>' \
-        --bos_text '<s>' \
-        --trust_remote_code \
-        --hf_cache_dir /data/cached"""
+    os.system(command)
 
-        os.system(command)
+pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
 
-    pool = multiprocessing.Pool(processes=parsed.num_worker if parsed.num_worker else multiprocessing.cpu_count())
+list(tqdm(pool.imap_unordered(process, files), total=len(files)))
 
-    list(tqdm(pool.imap_unordered(process, files), total=len(files)))
-
-if __name__ == "__main__":
-    main()
 

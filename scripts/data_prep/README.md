@@ -37,14 +37,12 @@ Where `--path` can be a single json file, or a folder containing json files. `--
 
 ### JSON data with multiprocessing
 
-- Run
+- Check the parameters and run
 
 ```bash
 # Convert json dataset to StreamingDataset format
-python run_mprocess_convert_dataset_json.py \
---json_chunk_path "/path/my_jsonls_files" \
---output_dir "/path/myoutput_dir" \
---num_worker 32 # according to your CPU and RAM. each process took 1 CPU and 1 GB RAM approximately.
+python run_mprocess_convert_dataset_json.py
+# according to your CPU and RAM. each process took 1 CPU and 1 GB RAM approximately.
 ```
 
 - Merge the shards by
