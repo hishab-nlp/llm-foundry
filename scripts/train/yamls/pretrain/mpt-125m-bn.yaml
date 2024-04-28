@@ -1,10 +1,10 @@
-data_local: ./dataset_v2
-data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/input_data # If blank, files must be present in data_local
+data_local: ./dataset_v1
+data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data # If blank, files must be present in data_local
 max_seq_len: 2048
 global_seed: 17
 
 # Run Name
-run_name: titulm_dv_data_v2_125m # If left blank, will be read from env var $RUN_NAME
+run_name: titulm_dv_data_v1_125m # If left blank, will be read from env var $RUN_NAME
 
 # Model
 model:
@@ -107,7 +107,7 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "titulm_dv_data_v2_125m"
+    "project": "titulm_dv_data_v1_125m"
   }
 
 # Checkpoint to local filesystem or remote object store
@@ -115,9 +115,9 @@ save_interval: 1000ba
 save_num_checkpoints_to_keep: 500  # Important, this cleans up checkpoints saved to DISK
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/checkpoints
+save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/checkpoints
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
-load_path: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/checkpoints/ep0-ba6000-rank0.pt
+# load_path: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/checkpoints/ep0-ba6000-rank0.pt
 # load_path: s3://my-bucket/my-folder/gpt-125m/checkpoints/latest-rank{rank}.pt
