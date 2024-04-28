@@ -118,7 +118,7 @@ save_interval: 1000ba
 save_num_checkpoints_to_keep: 500
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/gpt-neo-checkpoint
+save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v2/gpt-neo-checkpoint
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
