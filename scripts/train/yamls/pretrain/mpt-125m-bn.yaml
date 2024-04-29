@@ -108,7 +108,7 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "titulm_dv_data_v1_125m"
+    "project": "titulm_dv_data_v1_125m_tok_bloom"
   }
 
 # Checkpoint to local filesystem or remote object store
