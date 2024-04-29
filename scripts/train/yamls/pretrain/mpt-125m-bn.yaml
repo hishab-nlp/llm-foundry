@@ -21,7 +21,8 @@ model:
 
 # Tokenizer
 tokenizer:
-  name: hishab/titulm-sentencepiece-72k
+  # name: hishab/titulm-sentencepiece-72k
+  name: bigscience/bloom
   kwargs:
     model_max_length: ${max_seq_len}
 
