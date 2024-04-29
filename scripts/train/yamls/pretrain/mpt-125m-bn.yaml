@@ -1,5 +1,5 @@
 data_local: ./dataset_v1
-data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data # If blank, files must be present in data_local
+data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data_tok_bloom
 max_seq_len: 2048
 global_seed: 17
 
@@ -109,7 +109,7 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "titulm_dv_data_v1_125m_tok_bloom"
+    "project": "titulm_dv_data_v1_125m_bloom"
   }
 
 # Checkpoint to local filesystem or remote object store
@@ -117,7 +117,7 @@ save_interval: 1000ba
 save_num_checkpoints_to_keep: 500  # Important, this cleans up checkpoints saved to DISK
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/checkpoints_tok_bloom
+save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/checkpoints_bloom_all
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
