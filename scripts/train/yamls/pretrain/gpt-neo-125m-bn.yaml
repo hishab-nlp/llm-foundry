@@ -3,7 +3,7 @@
 
 data_local: ./dataset_v1
 data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data
-# tokenizer_name: hishab/titulm-sentencepiece-72k
+tokenizer_name: hishab/titulm-sentencepiece-72k
 # tokenizer_name: gpt2
 max_seq_len: 2048
 global_seed: 17
@@ -23,7 +23,7 @@ model:
 
 # Tokenizer
 tokenizer:
-  name: hishab/titulm-sentencepiece-72k
+  name: ${tokenizer_name}
   kwargs:
     model_max_length: ${max_seq_len}
 
@@ -35,7 +35,7 @@ train_loader:
     remote: ${data_remote}
     split: train
     shuffle: true
-    tokenizer_name: hishab/titulm-sentencepiece-72k
+    # tokenizer_name: ${tokenizer_name}
     max_seq_len: ${max_seq_len}
     shuffle_seed: ${global_seed}
   drop_last: true
@@ -48,7 +48,7 @@ eval_loader:
     remote: ${data_remote}
     split: validation
     shuffle: false
-    tokenizer_name: hishab/titulm-sentencepiece-72k
+    # tokenizer_name: ${tokenizer_name}
     max_seq_len: ${max_seq_len}
     shuffle_seed: ${global_seed}
   drop_last: false
