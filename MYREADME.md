@@ -6,7 +6,7 @@
 - Run the docker image with necessary arguments(For GPU)
 
   ```
-  sudo docker run -it --gpus all --shm-size=1g --ulimit memlock=-1 -v /data1/sagor/hishab_nlp/llm-foundry:/llm-foundry --rm mosaicml/llm-foundry:2.1.0_cu121-latest
+  sudo docker run -it --gpus all --shm-size=1g --ulimit memlock=-1 -v /home/sagor_sarker/llm-foundry:/llm-foundry --rm mosaicml/llm-foundry:2.1.0_cu121-latest
   ```
 
 - Run the docker image with necessary arguments(For CPU)
