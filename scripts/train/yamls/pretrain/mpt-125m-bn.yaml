@@ -1,10 +1,10 @@
 data_local: ./dataset_v1
-data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data_tok_extended_llama2
+data_remote: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/input_data_tok_llama2
 max_seq_len: 2048
 global_seed: 17
 
 # Run Name
-run_name: titulm_dv_data_v1_125m # If left blank, will be read from env var $RUN_NAME
+run_name: titulm_dv_data_v1_125m_tok_llama2 # If left blank, will be read from env var $RUN_NAME
 
 # Model
 model:
@@ -16,14 +16,14 @@ model:
   expansion_ratio: 4
   max_seq_len: ${max_seq_len}
   # vocab_size: 72000
-  vocab_size: 80865
+  vocab_size: 32000
   attn_config:
     attn_impl: triton
 
 # Tokenizer
 tokenizer:
   # name: hishab/titulm-sentencepiece-72k
-  name: hishab/bn-tokenizer-llama2-extend
+  name: hishab/llama-2-tokenizer-hf
   kwargs:
     model_max_length: ${max_seq_len}
 
@@ -109,7 +109,7 @@ callbacks:
 
 loggers:
   wandb: {
-    "project": "titulm_dv_data_v1_125m_tok_extended_llama2"
+    "project": "titulm_dv_data_v1_125m_tok_llama2"
   }
 
 # Checkpoint to local filesystem or remote object store
@@ -117,7 +117,7 @@ save_interval: 1000ba
 save_num_checkpoints_to_keep: 100  # Important, this cleans up checkpoints saved to DISK
 # save_folder: ./{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
-save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/checkpoints_tok_extended_llama2
+save_folder: gs://llm_data_store/common_crawl_data_filtering/data_validation_experiments/experiment_with_data_v1/checkpoints_tok_llama2
 
 # Load from local filesystem or remote object store
 # load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
